@@ -1,4 +1,4 @@
-import { Component, signal, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, signal, Inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Tarefa } from "./tarefa";
 import { TarefaService } from './tarefa.service';
@@ -9,14 +9,16 @@ import { TarefaService } from './tarefa.service';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('TODOapp');
   arrayDeTarefas: Tarefa[] = [];
 
   constructor(
     private tarefaService: TarefaService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.READ_tarefas();
     }
