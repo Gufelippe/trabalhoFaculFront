@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Tarefa } from "./tarefa";
 import { TarefaService } from './tarefa.service';
 
@@ -10,17 +11,21 @@ import { TarefaService } from './tarefa.service';
 })
 export class App {
   protected readonly title = signal('TODOapp');
-
   arrayDeTarefas: Tarefa[] = [];
 
-  constructor(private tarefaService: TarefaService) {
-    this.READ_tarefas();
+  constructor(
+    private tarefaService: TarefaService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.READ_tarefas();
+    }
   }
 
-  CREATE_tarefa(descricaoNovaTarefa: string) {
-    if (!descricaoNovaTarefa.trim()) return;
+  CREATE_tarefa(descricao: string) {
+    if (!descricao.trim()) return;
 
-    this.tarefaService.create(descricaoNovaTarefa).subscribe({
+    this.tarefaService.create(descricao).subscribe({
       next: (tarefaCriada) => {
         this.arrayDeTarefas.unshift(tarefaCriada);
       },
